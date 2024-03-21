@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""A module for web application deployment with Fabric."""
+""" A Module For Web Application Deployment With Fabric """
 import os
 from datetime import datetime
 from fabric.api import local, runs_once
@@ -7,7 +7,7 @@ from fabric.api import local, runs_once
 
 @runs_once
 def do_pack():
-    """Archives the static files."""
+    """ Archives The Static Files """
     if not os.path.isdir("versions"):
         os.mkdir("versions")
     cur_time = datetime.now()

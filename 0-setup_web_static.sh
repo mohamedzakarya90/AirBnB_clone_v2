@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs, configures, and starts the web server
+# Installs - Configures and Starts the web server
 SERVER_CONFIG="server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
@@ -38,7 +38,7 @@ HOME_PAGE="<!DOCTYPE html>
 	<body>
 </html>
 "
-# shellcheck disable=SC2230
+# Shellcheck Disable = SC2230
 if [[ "$(which nginx | grep -c nginx)" == '0' ]]; then
     apt-get update
     apt-get -y install nginx
