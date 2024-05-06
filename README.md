@@ -1,711 +1,227 @@
-Author of the project:Mohamed zakarya mohamed farag <mohamed.zakrya.farag@gmail.com>
+Author :Mohamed Zakarya Mohamed Farag<mohamed.zakrya.farag@gmail.com>
 Tasks
-0. Fork me if you can!
+0. Last clone!
 mandatory
-In the industry, you will work on an existing codebase 90% of the time. Your first thoughts upon looking at it might include:
-
-“Who did this code?”
-“How it works?”
-“Where are unittests?”
-“Where is this?”
-“Why did they do that like this?”
-“I don’t understand anything.”
-“… I will refactor everything…”
-But the worst thing you could possibly do is to redo everything. Please don’t do that! Note: the existing codebase might be perfect, or it might have errors. Don’t always trust the existing codebase!
+Score: 0.0% (Checks completed: 0.0%)
+A new codebase again? Yes!
 
 For this project you will fork this codebase:
 
-update the repository name to AirBnB_clone_v2
-update the README.md with your information but don’t delete the initial authors
-If you are the owner of this repository, please create a new repository named AirBnB_clone_v2 with the same content of AirBnB_clone
-
+Update the repository name to AirBnB_clone_v4
+Update the README.md:
+Add yourself as an author of the project
+Add new information about your new contribution
+Make it better!
+If you’re the owner of this codebase, create a new repository called AirBnB_clone_v4 and copy over all files from AirBnB_clone_v3
+If you didn’t install Flasgger from the previous project, it’s time! sudo pip3 install flasgger
 Repo:
 
-GitHub repository: AirBnB_clone_v2
+GitHub repository: AirBnB_clone_v4
    
-1. Bug free!
+1. Cash only
 mandatory
-Do you remember the unittest module?
+Write a script that starts a Flask web application:
 
-This codebase contains many test cases. Some are missing, but the ones included cover the basic functionality of the program.
+Based on web_flask, copy: web_flask/static, web_flask/templates/100-hbnb.html, web_flask/__init__.py and web_flask/100-hbnb.py into the web_dynamic folder
+Rename 100-hbnb.py to 0-hbnb.py
+Rename 100-hbnb.html to 0-hbnb.html
+Update 0-hbnb.py to replace the existing route to /0-hbnb/
+If 100-hbnb.html is not present, use 8-hbnb.html instead
 
-guillaume@ubuntu:~/AirBnB_v2$ python3 -m unittest discover tests 2>&1 /dev/null | tail -n 1
-OK
-guillaume@ubuntu:~/AirBnB_v2$ 
-All your unittests must pass without any errors at anytime in this project, with each storage engine!. Same for PEP8!
+guillaume@ubuntu:~/AirBnB_v4$ HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db python3 -m web_dynamic.0-hbnb
+* Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+....
+One problem now is the asset caching done by Flask.
 
-guillaume@ubuntu:~/AirBnB_v2$ HBNB_ENV=test HBNB_MYSQL_USER=hbnb_test HBNB_MYSQL_PWD=hbnb_test_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_test_db HBNB_TYPE_STORAGE=db python3 -m unittest discover tests 2>&1 /dev/null | tail -n 1
-OK
-guillaume@ubuntu:~/AirBnB_v2$ 
-Some tests won’t be relevant for some type of storage, please skip them by using the skipIf feature of the Unittest module - 26.3.6. Skipping tests and expected failures. Of course, the number of tests must be higher than the current number of tests, so if you decide to skip a test, you should write a new test!
+To avoid that, you will add a query string to each asset:
 
-How to test with MySQL?
-First, you create a specific database for it (next tasks). After, you have to remember what the purpose of an unittest?
+In 0-hbnb.py, add a variable cache_id to the render_template. The value of this variable must be an UUID (uuid.uuid4())
 
-“Assert a current state (objects/data/database), do an action, and validate this action changed (or not) the state of your objects/data/database”
+In 0-hbnb.html, add this variable cache_id as query string to each <link> tag URL
 
-For example, “you want to validate that the create State name="California" command in the console will add a new record in your table states in your database”, here steps for your unittest:
-
-get the number of current records in the table states (my using a MySQLdb for example - but not SQLAlchemy (remember, you want to test if it works, so it’s better to isolate from the system))
-execute the console command
-get (again) the number of current records in the table states (same method, with MySQLdb)
-if the difference is +1 => test passed
+guillaume@ubuntu:~/AirBnB_v4$ curl -s -XGET http://0.0.0.0:5000/0-hbnb/ | head -6
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/4-common.css?e211c9eb-7d17-4f12-85eb-4d50fa50cb1d" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/3-header.css?e211c9eb-7d17-4f12-85eb-4d50fa50cb1d" />
+guillaume@ubuntu:~/AirBnB_v4$ curl -s -XGET http://0.0.0.0:5000/0-hbnb/ | head -6
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/4-common.css?f834413e-0aa9-4767-b64a-c92db9cb1f82" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/3-header.css?f834413e-0aa9-4767-b64a-c92db9cb1f82" />
+guillaume@ubuntu:~/AirBnB_v4$ 
 Repo:
 
-GitHub repository: AirBnB_clone_v2
+GitHub repository: AirBnB_clone_v4
+Directory: web_dynamic
+File: 0-hbnb.py, templates/0-hbnb.html
   
-2. Console improvements
+2. Select some Amenities to be comfortable!
 mandatory
-Update the def do_create(self, arg): function of your command interpreter (console.py) to allow for object creation with given parameters:
+For the moment the filters section is static, let’s make it dynamic!
 
-Command syntax: create <Class name> <param 1> <param 2> <param 3>...
-Param syntax: <key name>=<value>
-Value syntax:
-String: "<value>" => starts with a double quote
-any double quote inside the value must be escaped with a backslash \
-all underscores _ must be replace by spaces . Example: You want to set the string My little house to the attribute name, your command line must be name="My_little_house"
-Float: <unit>.<decimal> => contains a dot .
-Integer: <number> => default case
-If any parameter doesn’t fit with these requirements or can’t be recognized correctly by your program, it must be skipped
-Don’t forget to add tests for this new feature!
+Replace the route 0-hbnb with 1-hbnb in the file 1-hbnb.py (based on 0-hbnb.py)
 
-Also, this new feature will be tested here only with FileStorage engine.
+Create a new template 1-hbnb.html (based on 0-hbnb.html) and update it:
 
-guillaume@ubuntu:~/AirBnB_v2$ cat test_params_create
-create State name="California"
-create State name="Arizona"
-all State
+Import JQuery in the <head> tag
+Import the JavaScript static/scripts/1-hbnb.js in the <head> tag
+In 1-hbnb.html and the following HTML files, add this variable cache_id as query string to the above <script> tag
+Add a <input type="checkbox"> tag to the li tag of each amenity
+The new checkbox must be at 10px on the left of the Amenity name
+Add to the input tags of each amenity (<li> tag) the attribute data-id=":amenity_id" => this will allow us to retrieve the Amenity ID from the DOM
+Add to the input tags of each amenity (<li> tag) the attribute data-name=":amenity_name" => this will allow us to retrieve the Amenity name from the DOM
+Write a JavaScript script (static/scripts/1-hbnb.js):
 
-create Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms=2 max_guest=10 price_by_night=300 latitude=37.773972 longitude=-122.431297
-all Place
-guillaume@ubuntu:~/AirBnB_v2$ cat test_params_create | ./console.py 
-(hbnb) d80e0344-63eb-434a-b1e0-07783522124e
-(hbnb) 092c9e5d-6cc0-4eec-aab9-3c1d79cfc2d7
-(hbnb) [[State] (d80e0344-63eb-434a-b1e0-07783522124e) {'id': 'd80e0344-63eb-434a-b1e0-07783522124e', 'created_at': datetime.datetime(2017, 11, 10, 4, 41, 7, 842160), 'updated_at': datetime.datetime(2017, 11, 10, 4, 41, 7, 842235), 'name': 'California'}, [State] (092c9e5d-6cc0-4eec-aab9-3c1d79cfc2d7) {'id': '092c9e5d-6cc0-4eec-aab9-3c1d79cfc2d7', 'created_at': datetime.datetime(2017, 11, 10, 4, 41, 7, 842779), 'updated_at': datetime.datetime(2017, 11, 10, 4, 41, 7, 842792), 'name': 'Arizona'}]
-(hbnb) (hbnb) 76b65327-9e94-4632-b688-aaa22ab8a124
-(hbnb) [[Place] (76b65327-9e94-4632-b688-aaa22ab8a124) {'number_bathrooms': 2, 'longitude': -122.431297, 'city_id': '0001', 'user_id': '0001', 'latitude': 37.773972, 'price_by_night': 300, 'name': 'My little house', 'id': '76b65327-9e94-4632-b688-aaa22ab8a124', 'max_guest': 10, 'number_rooms': 4, 'updated_at': datetime.datetime(2017, 11, 10, 4, 41, 7, 843774), 'created_at': datetime.datetime(2017, 11, 10, 4, 41, 7, 843747)}]
-(hbnb)
-guillaume@ubuntu:~/AirBnB_v2$
-Repo:
+Your script must be executed only when DOM is loaded
+You must use JQuery
+Listen for changes on each input checkbox tag:
+if the checkbox is checked, you must store the Amenity ID in a variable (dictionary or list)
+if the checkbox is unchecked, you must remove the Amenity ID from the variable
+update the h4 tag inside the div Amenities with the list of Amenities checked
+As example:
 
-GitHub repository: AirBnB_clone_v2
-File: console.py, models/, tests/
-   
-3. MySQL setup development
-mandatory
-Write a script that prepares a MySQL server for the project:
-
-A database hbnb_dev_db
-A new user hbnb_dev (in localhost)
-The password of hbnb_dev should be set to hbnb_dev_pwd
-hbnb_dev should have all privileges on the database hbnb_dev_db (and only this database)
-hbnb_dev should have SELECT privilege on the database performance_schema (and only this database)
-If the database hbnb_dev_db or the user hbnb_dev already exists, your script should not fail
-guillaume@ubuntu:~/AirBnB_v2$ cat setup_mysql_dev.sql | mysql -hlocalhost -uroot -p
-Enter password: 
-guillaume@ubuntu:~/AirBnB_v2$ echo "SHOW DATABASES;" | mysql -uhbnb_dev -p | grep hbnb_dev_db
-Enter password: 
-hbnb_dev_db
-guillaume@ubuntu:~/AirBnB_v2$ echo "SHOW GRANTS FOR 'hbnb_dev'@'localhost';" | mysql -uroot -p
-Enter password: 
-Grants for hbnb_dev@localhost
-GRANT USAGE ON *.* TO 'hbnb_dev'@'localhost'
-GRANT SELECT ON `performance_schema`.* TO 'hbnb_dev'@'localhost'
-GRANT ALL PRIVILEGES ON `hbnb_dev_db`.* TO 'hbnb_dev'@'localhost'
-guillaume@ubuntu:~/AirBnB_v2$ 
-Repo:
-
-GitHub repository: AirBnB_clone_v2
-File: setup_mysql_dev.sql
-   
-4. MySQL setup test
-mandatory
-Write a script that prepares a MySQL server for the project:
-
-A database hbnb_test_db
-A new user hbnb_test (in localhost)
-The password of hbnb_test should be set to hbnb_test_pwd
-hbnb_test should have all privileges on the database hbnb_test_db (and only this database)
-hbnb_test should have SELECT privilege on the database performance_schema (and only this database)
-If the database hbnb_test_db or the user hbnb_test already exists, your script should not fail
-guillaume@ubuntu:~/AirBnB_v2$ cat setup_mysql_test.sql | mysql -hlocalhost -uroot -p
-Enter password: 
-guillaume@ubuntu:~/AirBnB_v2$ echo "SHOW DATABASES;" | mysql -uhbnb_test -p | grep hbnb_test_db
-Enter password: 
-hbnb_test_db
-guillaume@ubuntu:~/AirBnB_v2$ echo "SHOW GRANTS FOR 'hbnb_test'@'localhost';" | mysql -uroot -p
-Enter password: 
-Grants for hbnb_test@localhost
-GRANT USAGE ON *.* TO 'hbnb_test'@'localhost'
-GRANT SELECT ON `performance_schema`.* TO 'hbnb_test'@'localhost'
-GRANT ALL PRIVILEGES ON `hbnb_test_db`.* TO 'hbnb_test'@'localhost'
-guillaume@ubuntu:~/AirBnB_v2$ 
-Repo:
-
-GitHub repository: AirBnB_clone_v2
-File: setup_mysql_test.sql
-   
-5. Delete object
-mandatory
-Update FileStorage: (models/engine/file_storage.py)
-
-Add a new public instance method: def delete(self, obj=None): to delete obj from __objects if it’s inside - if obj is equal to None, the method should not do anything
-Update the prototype of def all(self) to def all(self, cls=None) - that returns the list of objects of one type of class. Example below with State - it’s an optional filtering
-guillaume@ubuntu:~/AirBnB_v2$ cat main_delete.py
-#!/usr/bin/python3
-""" Test delete feature
-"""
-from models.engine.file_storage import FileStorage
-from models.state import State
-
-fs = FileStorage()
-
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])
-
-# Create a new State
-new_state = State()
-new_state.name = "California"
-fs.new(new_state)
-fs.save()
-print("New State: {}".format(new_state))
-
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])
-
-# Create another State
-another_state = State()
-another_state.name = "Nevada"
-fs.new(another_state)
-fs.save()
-print("Another State: {}".format(another_state))
-
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])        
-
-# Delete the new State
-fs.delete(new_state)
-
-# All States
-all_states = fs.all(State)
-print("All States: {}".format(len(all_states.keys())))
-for state_key in all_states.keys():
-    print(all_states[state_key])
-
-guillaume@ubuntu:~/AirBnB_v2$ ./main_delete.py
-All States: 0
-New State: [State] (b0026fc6-116f-4d1a-a9cb-6bb9b299f1ce) {'name': 'California', 'created_at': datetime.datetime(2017, 11, 10, 1, 13, 32, 561137), 'id': 'b0026fc6-116f-4d1a-a9cb-6bb9b299f1ce'}
-All States: 1
-[State] (b0026fc6-116f-4d1a-a9cb-6bb9b299f1ce) {'name': 'California', 'created_at': datetime.datetime(2017, 11, 10, 1, 13, 32, 561137), 'id': 'b0026fc6-116f-4d1a-a9cb-6bb9b299f1ce'}
-Another State: [State] (37705d25-8903-4318-9303-6d6d336a22c1) {'name': 'Nevada', 'created_at': datetime.datetime(2017, 11, 10, 1, 13, 34, 619133), 'id': '37705d25-8903-4318-9303-6d6d336a22c1'}
-All States: 2
-[State] (b0026fc6-116f-4d1a-a9cb-6bb9b299f1ce) {'name': 'California', 'created_at': datetime.datetime(2017, 11, 10, 1, 13, 32, 561137), 'id': 'b0026fc6-116f-4d1a-a9cb-6bb9b299f1ce'}
-[State] (37705d25-8903-4318-9303-6d6d336a22c1) {'name': 'Nevada', 'created_at': datetime.datetime(2017, 11, 10, 1, 13, 34, 619133), 'id': '37705d25-8903-4318-9303-6d6d336a22c1'}
-All States: 1
-[State] (37705d25-8903-4318-9303-6d6d336a22c1) {'name': 'Nevada', 'created_at': datetime.datetime(2017, 11, 10, 1, 13, 34, 619133), 'id': '37705d25-8903-4318-9303-6d6d336a22c1'}
-guillaume@ubuntu:~/AirBnB_v2$ 
-Repo:
-
-GitHub repository: AirBnB_clone_v2
-File: models/engine/file_storage.py
-   
-6. DBStorage - States and Cities
-mandatory
-SQLAlchemy will be your best friend!
-
-It’s time to change your storage engine and use SQLAlchemy
-
-
-
-In the following steps, you will make multiple changes:
-
-the biggest one is the transition between FileStorage and DBStorage: In the industry, you will never find a system who can work with both in the same time - but you will find a lot of services who can manage multiple storage systems. (for example, logs service: in memory, in disk, in database, in ElasticSearch etc…) - The main concept behind is the abstraction: Make your code running without knowing how it’s stored.
-add attributes for SQLAlchemy: they will be class attributes, like previously, with a “weird” value. Don’t worry, these values are for description and mapping to the database. If you change one of these values, or add/remove one attribute of the a model, you will have to delete the database and recreate it in SQL. (Yes it’s not optimal, but for development purposes, it’s ok. In production, we will add “migration mechanism” - for the moment, don’t spend time on it.)
-Please follow all these steps:
-
-Update BaseModel: (models/base_model.py)
-
-Create Base = declarative_base() before the class definition of BaseModel
-Note! BaseModel does /not/ inherit from Base. All other classes will inherit from BaseModel to get common values (id, created_at, updated_at), where inheriting from Base will actually cause SQLAlchemy to attempt to map it to a table.
-Add or replace in the class BaseModel:
-class attribute id
-represents a column containing a unique string (60 characters)
-can’t be null
-primary key
-class attribute created_at
-represents a column containing a datetime
-can’t be null
-default value is the current datetime (use datetime.utcnow())
-class attribute updated_at
-represents a column containing a datetime
-can’t be null
-default value is the current datetime (use datetime.utcnow())
-Move the models.storage.new(self) from def __init__(self, *args, **kwargs): to def save(self): and call it just before models.storage.save()
-In def __init__(self, *args, **kwargs):, manage kwargs to create instance attribute from this dictionary. Ex: kwargs={ 'name': "California" } => self.name = "California" if it’s not already the case
-Update the to_dict() method of the class BaseModel:
-remove the key _sa_instance_state from the dictionary returned by this method only if this key exists
-Add a new public instance method: def delete(self): to delete the current instance from the storage (models.storage) by calling the method delete
-Update City: (models/city.py)
-
-City inherits from BaseModel and Base (respect the order)
-Add or replace in the class City:
-class attribute __tablename__ -
-represents the table name, cities
-class attribute name
-represents a column containing a string (128 characters)
-can’t be null
-class attribute state_id
-represents a column containing a string (60 characters)
-can’t be null
-is a foreign key to states.id
-Update State: (models/state.py)
-
-State inherits from BaseModel and Base (respect the order)
-Add or replace in the class State:
-class attribute __tablename__
-represents the table name, states
-class attribute name
-represents a column containing a string (128 characters)
-can’t be null
-for DBStorage: class attribute cities must represent a relationship with the class City. If the State object is deleted, all linked City objects must be automatically deleted. Also, the reference from a City object to his State should be named state
-for FileStorage: getter attribute cities that returns the list of City instances with state_id equals to the current State.id => It will be the FileStorage relationship between State and City
-New engine DBStorage: (models/engine/db_storage.py)
-
-Private class attributes:
-__engine: set to None
-__session: set to None
-Public instance methods:
-__init__(self):
-create the engine (self.__engine)
-the engine must be linked to the MySQL database and user created before (hbnb_dev and hbnb_dev_db):
-dialect: mysql
-driver: mysqldb
-all of the following values must be retrieved via environment variables:
-MySQL user: HBNB_MYSQL_USER
-MySQL password: HBNB_MYSQL_PWD
-MySQL host: HBNB_MYSQL_HOST (here = localhost)
-MySQL database: HBNB_MYSQL_DB
-don’t forget the option pool_pre_ping=True when you call create_engine
-drop all tables if the environment variable HBNB_ENV is equal to test
-all(self, cls=None):
-query on the current database session (self.__session) all objects depending of the class name (argument cls)
-if cls=None, query all types of objects (User, State, City, Amenity, Place and Review)
-this method must return a dictionary: (like FileStorage)
-key = <class-name>.<object-id>
-value = object
-new(self, obj): add the object to the current database session (self.__session)
-save(self): commit all changes of the current database session (self.__session)
-delete(self, obj=None): delete from the current database session obj if not None
-reload(self):
-create all tables in the database (feature of SQLAlchemy) (WARNING: all classes who inherit from Base must be imported before calling Base.metadata.create_all(engine))
-create the current database session (self.__session) from the engine (self.__engine) by using a sessionmaker - the option expire_on_commit must be set to False ; and scoped_session - to make sure your Session is thread-safe
-Update __init__.py: (models/__init__.py)
-
-Add a conditional depending of the value of the environment variable HBNB_TYPE_STORAGE:
-If equal to db:
-Import DBStorage class in this file
-Create an instance of DBStorage and store it in the variable storage (the line storage.reload() should be executed after this instantiation)
-Else:
-Import FileStorage class in this file
-Create an instance of FileStorage and store it in the variable storage (the line storage.reload() should be executed after this instantiation)
-This “switch” will allow you to change storage type directly by using an environment variable (example below)
-State creation:
-
-guillaume@ubuntu:~/AirBnB_v2$ echo 'create State name="California"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) 95a5abab-aa65-4861-9bc6-1da4a36069aa
-(hbnb)
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'all State' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) [[State] (95a5abab-aa65-4861-9bc6-1da4a36069aa) {'name': 'California', 'id': '95a5abab-aa65-4861-9bc6-1da4a36069aa', 'updated_at': datetime.datetime(2017, 11, 10, 0, 49, 54), 'created_at': datetime.datetime(2017, 11, 10, 0, 49, 54)}]
-(hbnb)
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM states\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-        id: 95a5abab-aa65-4861-9bc6-1da4a36069aa
-created_at: 2017-11-10 00:49:54
-updated_at: 2017-11-10 00:49:54
-      name: California
-guillaume@ubuntu:~/AirBnB_v2$ 
-City creation:
-
-guillaume@ubuntu:~/AirBnB_v2$ echo 'create City state_id="95a5abab-aa65-4861-9bc6-1da4a36069aa" name="San_Francisco"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py
-(hbnb) 4b457e66-c7c8-4f63-910f-fd91c3b7140b
-(hbnb)
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'all City' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) [[City] (4b457e66-c7c8-4f63-910f-fd91c3b7140b) {'id': '4b457e66-c7c8-4f63-910f-fd91c3b7140b', 'updated_at': datetime.datetime(2017, 11, 10, 0, 52, 53), 'state_id': '95a5abab-aa65-4861-9bc6-1da4a36069aa', 'name': 'San Francisco', 'created_at': datetime.datetime(2017, 11, 10, 0, 52, 53)]
-(hbnb)
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'create City state_id="95a5abab-aa65-4861-9bc6-1da4a36069aa" name="San_Jose"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py
-(hbnb) a7db3cdc-30e0-4d80-ad8c-679fe45343ba
-(hbnb)
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM cities\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-        id: 4b457e66-c7c8-4f63-910f-fd91c3b7140b
-created_at: 2017-11-10 00:52:53
-updated_at: 2017-11-10 00:52:53
-      name: San Francisco
-  state_id: 95a5abab-aa65-4861-9bc6-1da4a36069aa
-*************************** 2. row ***************************
-        id: a7db3cdc-30e0-4d80-ad8c-679fe45343ba
-created_at: 2017-11-10 00:53:19
-updated_at: 2017-11-10 00:53:19
-      name: San Jose
-  state_id: 95a5abab-aa65-4861-9bc6-1da4a36069aa
-guillaume@ubuntu:~/AirBnB_v2$ 
-Repo:
-
-GitHub repository: AirBnB_clone_v2
-File: models/base_model.py, models/city.py, models/state.py, models/engine/db_storage.py, models/__init__.py
   
-7. DBStorage - User
-mandatory
-Update User: (models/user.py)
 
-User inherits from BaseModel and Base (respect the order)
-Add or replace in the class User:
-class attribute __tablename__
-represents the table name, users
-class attribute email
-represents a column containing a string (128 characters)
-can’t be null
-class attribute password
-represents a column containing a string (128 characters)
-can’t be null
-class attribute first_name
-represents a column containing a string (128 characters)
-can be null
-class attribute last_name
-represents a column containing a string (128 characters)
-can be null
-guillaume@ubuntu:~/AirBnB_v2$ echo 'create User email="gui@hbtn.io" password="guipwd" first_name="Guillaume" last_name="Snow"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) 4f3f4b42-a4c3-4c20-a492-efff10d00c0b
-(hbnb) 
-guillaume@ubuntu:~/AirBnB_v2$
-guillaume@ubuntu:~/AirBnB_v2$ echo 'all User' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) [[User] (4f3f4b42-a4c3-4c20-a492-efff10d00c0b) {'updated_at': datetime.datetime(2017, 11, 10, 1, 17, 26), 'id': '4f3f4b42-a4c3-4c20-a492-efff10d00c0b', 'last_name': 'Snow', 'first_name': 'Guillaume', 'email': 'gui@hbtn.io', 'created_at': datetime.datetime(2017, 11, 10, 1, 17, 26), 'password': 'f4ce007d8e84e0910fbdd7a06fa1692d'}]
-(hbnb) 
-guillaume@ubuntu:~/AirBnB_v2$
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM users\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-        id: 4f3f4b42-a4c3-4c20-a492-efff10d00c0b
-created_at: 2017-11-10 01:17:26
-updated_at: 2017-11-10 01:17:26
-     email: gui@hbtn.io
-  password: guipwd
-first_name: Guillaume
- last_name: Snow
-guillaume@ubuntu:~/AirBnB_v2$
 Repo:
 
-GitHub repository: AirBnB_clone_v2
-File: models/user.py
+GitHub repository: AirBnB_clone_v4
+Directory: web_dynamic
+File: 1-hbnb.py, templates/1-hbnb.html, static/scripts/1-hbnb.js
   
-8. DBStorage - Place
+3. API status
 mandatory
-Update Place: (models/place.py)
+Before requesting the HBNB API, it’s better to know the status of this one.
 
-Place inherits from BaseModel and Base (respect the order)
-Add or replace in the class Place:
-class attribute __tablename__
-represents the table name, places
-class attribute city_id
-represents a column containing a string (60 characters)
-can’t be null
-is a foreign key to cities.id
-class attribute user_id
-represents a column containing a string (60 characters)
-can’t be null
-is a foreign key to users.id
-class attribute name
-represents a column containing a string (128 characters)
-can’t be null
-class attribute description
-represents a column containing a string (1024 characters)
-can be null
-class attribute number_rooms
-represents a column containing an integer
-can’t be null
-default value: 0
-class attribute number_bathrooms
-represents a column containing an integer
-can’t be null
-default value: 0
-class attribute max_guest
-represents a column containing an integer
-can’t be null
-default value: 0
-class attribute price_by_night
-represents a column containing an integer
-can’t be null
-default value: 0
-class attribute latitude
-represents a column containing a float
-can be null
-class attribute longitude
-represents a column containing a float
-can be null
-Update User: (models/user.py)
+Update the API entry point (api/v1/app.py) by replacing the current CORS CORS(app, origins="0.0.0.0") by CORS(app, resources={r"/api/v1/*": {"origins": "*"}}).
 
-Add or replace in the class User:
-class attribute places must represent a relationship with the class Place. If the User object is deleted, all linked Place objects must be automatically deleted. Also, the reference from a Place object to his User should be named user
-Update City: (models/city.py)
+Change the route 1-hbnb to 2-hbnb in the file 2-hbnb.py (based on 1-hbnb.py)
 
-Add or replace in the class City:
-class attribute places must represent a relationship with the class Place. If the City object is deleted, all linked Place objects must be automatically deleted. Also, the reference from a Place object to his City should be named cities
-guillaume@ubuntu:~/AirBnB_v2$ echo 'create Place city_id="4b457e66-c7c8-4f63-910f-fd91c3b7140b" user_id="4f3f4b42-a4c3-4c20-a492-efff10d00c0b" name="Lovely_place" number_rooms=3 number_bathrooms=1 max_guest=6 price_by_night=120 latitude=37.773972 longitude=-122.431297' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) ed72aa02-3286-4891-acbc-9d9fc80a1103
-(hbnb) 
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'all Place' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) [[Place] (ed72aa02-3286-4891-acbc-9d9fc80a1103) {'latitude': 37.774, 'city_id': '4b457e66-c7c8-4f63-910f-fd91c3b7140b', 'price_by_night': 120, 'id': 'ed72aa02-3286-4891-acbc-9d9fc80a1103', 'user_id': '4f3f4b42-a4c3-4c20-a492-efff10d00c0b', 'max_guest': 6, 'created_at': datetime.datetime(2017, 11, 10, 1, 22, 30), 'description': None, 'number_rooms': 3, 'longitude': -122.431, 'number_bathrooms': 1, 'name': '"Lovely place', 'updated_at': datetime.datetime(2017, 11, 10, 1, 22, 30)}]
-(hbnb) 
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM places\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-              id: ed72aa02-3286-4891-acbc-9d9fc80a1103
-      created_at: 2017-11-10 01:22:30
-      updated_at: 2017-11-10 01:22:30
-         city_id: 4b457e66-c7c8-4f63-910f-fd91c3b7140b
-         user_id: 4f3f4b42-a4c3-4c20-a492-efff10d00c0b
-            name: "Lovely place"
-     description: NULL
-    number_rooms: 3
-number_bathrooms: 1
-       max_guest: 6
-  price_by_night: 120
-        latitude: 37.774
-       longitude: -122.431
-guillaume@ubuntu:~/AirBnB_v2$ 
+Create a new template 2-hbnb.html (based on 1-hbnb.html) and update it:
+
+Import the JavaScript static/scripts/2-hbnb.js in the <head> tag (instead of 1-hbnb.js)
+Add a new div element in the header tag:
+Attribute ID should be api_status
+Align to the right
+Circle of 40px diameter
+Center vertically
+At 30px of the right border
+Background color #cccccc
+Also add a class available for this new element in web_dynamic/static/styles/3-header.css:
+Background color #ff545f
+Write a JavaScript script (static/scripts/2-hbnb.js):
+
+Based on 1-hbnb.js
+Request http://0.0.0.0:5001/api/v1/status/:
+If in the status is “OK”, add the class available to the div#api_status
+Otherwise, remove the class available to the div#api_status
+To start the API in the port 5001:
+
+guillaume@ubuntu:~/AirBnB_v4$ HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db HBNB_API_PORT=5001 python3 -m api.v1.app
+...
+For example:
+
+ 
+
 Repo:
 
-GitHub repository: AirBnB_clone_v2
-File: models/place.py, models/user.py, models/city.py
+GitHub repository: AirBnB_clone_v4
+File: api/v1/app.py, web_dynamic/2-hbnb.py, web_dynamic/templates/2-hbnb.html, web_dynamic/static/styles/3-header.css, web_dynamic/static/scripts/2-hbnb.js
   
-9. DBStorage - Review
+4. Fetch places
 mandatory
-Update Review: (models/review.py)
+Replace the route 2-hbnb with 3-hbnb in the file 3-hbnb.py (based on 2-hbnb.py)
 
-Review inherits from BaseModel and Base (respect the order)
-Add or replace in the class Review:
-class attribute __tablename__
-represents the table name, reviews
-class attribute text
-represents a column containing a string (1024 characters)
-can’t be null
-class attribute place_id
-represents a column containing a string (60 characters)
-can’t be null
-is a foreign key to places.id
-class attribute user_id
-represents a column containing a string (60 characters)
-can’t be null
-is a foreign key to users.id
-Update User: (models/user.py)
+Create a new template 3-hbnb.html (based on 2-hbnb.html) and update it:
 
-Add or replace in the class User:
-class attribute reviews must represent a relationship with the class Review. If the User object is deleted, all linked Review objects must be automatically deleted. Also, the reference from a Review object to his User should be named user
-Update Place: (models/place.py)
+Import the JavaScript static/scripts/3-hbnb.js in the <head> tag (instead of 2-hbnb.js)
+Remove the entire Jinja section of displaying all places (all article tags)
+Write a JavaScript script (static/scripts/3-hbnb.js):
 
-for DBStorage: class attribute reviews must represent a relationship with the class Review. If the Place object is deleted, all linked Review objects must be automatically deleted. Also, the reference from a Review object to his Place should be named place
-for FileStorage: getter attribute reviews that returns the list of Review instances with place_id equals to the current Place.id => It will be the FileStorage relationship between Place and Review
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'create User email="bob@hbtn.io" password="bobpwd" first_name="Bob" last_name="Dylan"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) d93638d9-8233-4124-8f4e-17786592908b
-(hbnb) 
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'create Review place_id="ed72aa02-3286-4891-acbc-9d9fc80a1103" user_id="d93638d9-8233-4124-8f4e-17786592908b" text="Amazing_place,_huge_kitchen"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) a2d163d3-1982-48ab-a06b-9dc71e68a791
-(hbnb) 
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'all Review' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py 
-(hbnb) [[Review] (f2616ff2-f723-4d67-85dc-f050a38e0f2f) {'text': 'Amazing place, huge kitchen', 'place_id': 'ed72aa02-3286-4891-acbc-9d9fc80a1103', 'id': 'f2616ff2-f723-4d67-85dc-f050a38e0f2f', 'updated_at': datetime.datetime(2017, 11, 10, 4, 6, 25), 'created_at': datetime.datetime(2017, 11, 10, 4, 6, 25), 'user_id': 'd93638d9-8233-4124-8f4e-17786592908b'}]
-(hbnb) 
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM reviews\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-        id: f2616ff2-f723-4d67-85dc-f050a38e0f2f
-created_at: 2017-11-10 04:06:25
-updated_at: 2017-11-10 04:06:25
-      text: Amazing place, huge kitchen
-  place_id: ed72aa02-3286-4891-acbc-9d9fc80a1103
-   user_id: d93638d9-8233-4124-8f4e-17786592908b
-guillaume@ubuntu:~/AirBnB_v2$ 
+Based on 2-hbnb.js
+Request http://0.0.0.0:5001/api/v1/places_search/:
+Description of this endpoint here. If this endpoint is not available, you will have to add it to the API (you can work all together for creating this endpoint)
+Send a POST request with Content-Type: application/json and an empty dictionary in the body - cURL version: curl "http://0.0.0.0:5001/api/v1/places_search" -XPOST -H "Content-Type: application/json" -d '{}'
+Loop into the result of the request and create an article tag representing a Place in the section.places. (you can remove the Owner tag in the place description)
+The final result must be the same as previously, but now, places are loaded from the front-end, not from the back-end!
+
 Repo:
 
-GitHub repository: AirBnB_clone_v2
-File: models/review.py, models/user.py, models/place.py
+GitHub repository: AirBnB_clone_v4
+File: web_dynamic/3-hbnb.py, web_dynamic/templates/3-hbnb.html, web_dynamic/static/scripts/3-hbnb.js
   
-10. DBStorage - Amenity... and BOOM!
+5. Filter places by Amenity
 mandatory
-Update Amenity: (models/amenity.py)
+Replace the route 3-hbnb with 4-hbnb in the file 4-hbnb.py (based on 3-hbnb.py)
 
-Amenity inherits from BaseModel and Base (respect the order)
-Add or replace in the class Amenity:
-class attribute __tablename__
-represents the table name, amenities
-class attribute name
-represents a column containing a string (128 characters)
-can’t be null
-class attribute place_amenities must represent a relationship Many-To-Many between the class Place and Amenity. Please see below more detail: place_amenity in the Place update
-Update Place: (models/place.py)
+Create a new template 4-hbnb.html (based on 3-hbnb.html) and update it:
 
-Add an instance of SQLAlchemy Table called place_amenity for creating the relationship Many-To-Many between Place and Amenity:
-table name place_amenity
-metadata = Base.metadata
-2 columns:
-place_id, a string of 60 characters foreign key of places.id, primary key in the table and never null
-amenity_id, a string of 60 characters foreign key of amenities.id, primary key in the table and never null
-Update Place class:
-for DBStorage: class attribute amenities must represent a relationship with the class Amenity but also as secondary to place_amenity with option viewonly=False (place_amenity has been define previously)
-for FileStorage:
-Getter attribute amenities that returns the list of Amenity instances based on the attribute amenity_ids that contains all Amenity.id linked to the Place
-Setter attribute amenities that handles append method for adding an Amenity.id to the attribute amenity_ids. This method should accept only Amenity object, otherwise, do nothing.
-What’s a Many-to-Many relationship?
-In our system, we don’t want to duplicate amenities (for example, having 10000 time the amenity Wifi), so they will be unique. But, at least 2 places can have the same amenity (like Wifi for example). We are in the case of:
+Import the JavaScript static/scripts/4-hbnb.js in the <head> tag (instead of 3-hbnb.js)
+Write a JavaScript script (static/scripts/4-hbnb.js):
 
-an amenity can be linked to multiple places
-a place can have multiple amenities
-= Many-To-Many
+Based on 3-hbnb.js
+When the button tag is clicked, a new POST request to places_search should be made with the list of Amenities checked
+Now you have the first filter implemented, enjoy!
 
-To make this link working, we will create a third table called place_amenity that will create these links.
-
-And you are good, you have a new engine!
-
-guillaume@ubuntu:~/AirBnB_v2$ cat main_place_amenities.py 
-#!/usr/bin/python3
-""" Test link Many-To-Many Place <> Amenity
-"""
-from models import *
-
-# creation of a State
-state = State(name="California")
-state.save()
-
-# creation of a City
-city = City(state_id=state.id, name="San Francisco")
-city.save()
-
-# creation of a User
-user = User(email="john@snow.com", password="johnpwd")
-user.save()
-
-# creation of 2 Places
-place_1 = Place(user_id=user.id, city_id=city.id, name="House 1")
-place_1.save()
-place_2 = Place(user_id=user.id, city_id=city.id, name="House 2")
-place_2.save()
-
-# creation of 3 various Amenity
-amenity_1 = Amenity(name="Wifi")
-amenity_1.save()
-amenity_2 = Amenity(name="Cable")
-amenity_2.save()
-amenity_3 = Amenity(name="Oven")
-amenity_3.save()
-
-# link place_1 with 2 amenities
-place_1.amenities.append(amenity_1)
-place_1.amenities.append(amenity_2)
-
-# link place_2 with 3 amenities
-place_2.amenities.append(amenity_1)
-place_2.amenities.append(amenity_2)
-place_2.amenities.append(amenity_3)
-
-storage.save()
-
-print("OK")
-
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./main_place_amenities.py
-OK
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM amenities\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-        id: 47321eb8-152a-46df-969a-440aa67a6d59
-created_at: 2017-11-10 04:22:02
-updated_at: 2017-11-10 04:22:02
-      name: Cable
-*************************** 2. row ***************************
-        id: 4a307e7f-68f9-438f-81c0-8325898dda2a
-created_at: 2017-11-10 04:22:02
-updated_at: 2017-11-10 04:22:02
-      name: Oven
-*************************** 3. row ***************************
-        id: b80aec52-d0c9-420a-8471-3254572954b6
-created_at: 2017-11-10 04:22:02
-updated_at: 2017-11-10 04:22:02
-      name: Wifi
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM places\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-              id: 497e3867-d6e9-4401-9c7c-9687c18d2ac7
-      created_at: 2017-11-10 04:22:02
-      updated_at: 2017-11-10 04:22:02
-         city_id: 9d60df6e-31f7-430c-8162-69e89f4a17aa
-         user_id: 9b37bd51-6aef-485f-bf10-c7ab83fea2e9
-            name: House 1
-     description: NULL
-    number_rooms: 0
-number_bathrooms: 0
-       max_guest: 0
-  price_by_night: 0
-        latitude: NULL
-       longitude: NULL
-*************************** 2. row ***************************
-              id: db549ae1-4500-4d0c-9b50-4b4978ed229e
-      created_at: 2017-11-10 04:22:02
-      updated_at: 2017-11-10 04:22:02
-         city_id: 9d60df6e-31f7-430c-8162-69e89f4a17aa
-         user_id: 9b37bd51-6aef-485f-bf10-c7ab83fea2e9
-            name: House 2
-     description: NULL
-    number_rooms: 0
-number_bathrooms: 0
-       max_guest: 0
-  price_by_night: 0
-        latitude: NULL
-       longitude: NULL
-guillaume@ubuntu:~/AirBnB_v2$ 
-guillaume@ubuntu:~/AirBnB_v2$ echo 'SELECT * FROM place_amenity\G' | mysql -uhbnb_dev -p hbnb_dev_db
-Enter password: 
-*************************** 1. row ***************************
-  place_id: 497e3867-d6e9-4401-9c7c-9687c18d2ac7
-amenity_id: 47321eb8-152a-46df-969a-440aa67a6d59
-*************************** 2. row ***************************
-  place_id: db549ae1-4500-4d0c-9b50-4b4978ed229e
-amenity_id: 47321eb8-152a-46df-969a-440aa67a6d59
-*************************** 3. row ***************************
-  place_id: db549ae1-4500-4d0c-9b50-4b4978ed229e
-amenity_id: 4a307e7f-68f9-438f-81c0-8325898dda2a
-*************************** 4. row ***************************
-  place_id: 497e3867-d6e9-4401-9c7c-9687c18d2ac7
-amenity_id: b80aec52-d0c9-420a-8471-3254572954b6
-*************************** 5. row ***************************
-  place_id: db549ae1-4500-4d0c-9b50-4b4978ed229e
-amenity_id: b80aec52-d0c9-420a-8471-3254572954b6
-guillaume@ubuntu:~/AirBnB_v2$ 
 Repo:
 
-GitHub repository: AirBnB_clone_v2
-File: models/amenity.py, models/place.py
+GitHub repository: AirBnB_clone_v4
+File: web_dynamic/4-hbnb.py, web_dynamic/templates/4-hbnb.html, web_dynamic/static/scripts/4-hbnb.js
+  
+6. States and Cities
+#advanced
+Now, reproduce the same steps with the State and City filter:
+
+Replace the route 4-hbnb to 100-hbnb in the file 100-hbnb.py (based on 4-hbnb.py)
+
+Create a new template 100-hbnb.html (based on 4-hbnb.html) and update it:
+
+Import the JavaScript static/scripts/100-hbnb.js in the <head> tag (instead of 4-hbnb.js)
+Add to all li tags of each state a new tag: <input type="checkbox">
+Add to all li tags of each cities a new tag: <input type="checkbox">
+The new checkbox must be at 10px on the left of the State or City name
+Add to all input tags of each states (<li> tag) the attribute data-id=":state_id"
+Add to all input tags of each states (<li> tag) the attribute data-name=":state_name"
+Add to all input tags of each cities (<li> tag) the attribute data-id=":city_id"
+Add to all input tags of each cities (<li> tag) the attribute data-name=":city_name"
+Write a JavaScript script (static/scripts/100-hbnb.js):
+
+Based on 4-hbnb.js
+Listen to changes on each input checkbox tag:
+if the checkbox is checked, you must store the State or City ID in a variable (dictionary or list)
+if the checkbox is unchecked, you must remove the State or City ID from the variable
+update the h4 tag inside the div Locations with the list of States or Cities checked
+When the button tag is clicked, a new POST request to places_search should be made with the list of Amenities, Cities and States checked
+Repo:
+
+GitHub repository: AirBnB_clone_v4
+File: web_dynamic/100-hbnb.py, web_dynamic/templates/100-hbnb.html, web_dynamic/static/scripts/100-hbnb.js
+  
+7. Reviews
+#advanced
+Let’s add a new feature: show and hide reviews!
+
+Replace the route 100-hbnb to 101-hbnb in the file 101-hbnb.py (based on 100-hbnb.py)
+
+Create a new template 101-hbnb.html (based on 100-hbnb.html) and update it:
+
+Import the JavaScript static/scripts/101-hbnb.js in the <head> tag (instead of 101-hbnb.js)
+Design the list of reviews from this task
+Add a span element at the right of the H2 “Reviews” with value “show” (add all necessary attributes to do this feature)
+Write a JavaScript script (static/scripts/101-hbnb.js):
+
+Based on 100-hbnb.js
+When the span next to the Reviews h2 is clicked by the user:
+Fetch, parse, display reviews and change the text to “hide”
+If the text is “hide”: remove all Review elements from the DOM
+This button should work like a toggle to fetch/display and hide reviews
+Repo:
+
+GitHub repository: AirBnB_clone_v4
+File: web_dynamic/101-hbnb.py, web_dynamic/templates/101-hbnb.html, web_dynamic/static/scripts/101-hbnb.js
   
 
